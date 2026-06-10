@@ -33,6 +33,6 @@ jobs:
           context: .
           build-args: COMMITHASH=${{ github.sha }}
           platforms: linux/amd64,linux/arm64/v8
-          tags: getfider/fider:PR_${{ inputs.pr_number }}
+          tags: m11s/fider:PR_${{ inputs.pr_number }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

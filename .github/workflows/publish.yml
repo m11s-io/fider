@@ -41,7 +41,7 @@ jobs:
           context: .
           build-args: COMMITHASH=${{ github.event.workflow_run.head_sha }}
           platforms: linux/amd64
-          tags: getfider/fider:PR_${{ github.event.workflow_run.pull_requests[0].number }}
+          tags: m11s/fider:PR_${{ github.event.workflow_run.pull_requests[0].number }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -54,8 +54,8 @@ jobs:
           build-args: COMMITHASH=${{ github.event.workflow_run.head_sha }}
           platforms: linux/amd64,linux/arm64/v8
           tags: |
-            getfider/fider:SHA_${{ github.event.workflow_run.head_sha }}
-            getfider/fider:${{ github.event.workflow_run.head_branch == 'main' && 'main' || 'stable' }}
+            m11s/fider:SHA_${{ github.event.workflow_run.head_sha }}
+            m11s/fider:${{ github.event.workflow_run.head_branch == 'main' && 'main' || 'stable' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -69,6 +69,6 @@ jobs:
             COMMITHASH=${{ github.event.workflow_run.head_sha }}
             VERSION=${{ github.event.workflow_run.display_title }}
           platforms: linux/amd64,linux/arm64/v8
-          tags: getfider/fider:${{ github.event.workflow_run.display_title }}
+          tags: m11s/fider:${{ github.event.workflow_run.display_title }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

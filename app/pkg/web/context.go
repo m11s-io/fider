@@ -610,6 +610,10 @@ func BaseURL(ctx context.Context) string {
 		return env.Config.BaseURL
 	}
 
+	if webCtx, ok := ctx.(*Context); ok {
+		return webCtx.Request.BaseURL()
+	}
+
 	request, ok := ctx.Value(app.RequestCtxKey).(Request)
 	if ok {
 		return request.BaseURL()
@@ -617,10 +621,13 @@ func BaseURL(ctx context.Context) string {
 	return ""
 }
 
-// OAuthBaseURL returns the OAuth base URL used for host-wide OAuth authentication
-// For Single Tenant HostMode, BaseURL is the current BaseURL
-// For Multi Tenant HostMode, BaseURL is //login.{HOST_DOMAIN}
+// OAuthBaseURL returns the OAuth base URL for the current request host.
 func OAuthBaseURL(ctx context.Context) string {
+	return BaseURL(ctx)
+}
+
+// LoginBaseURL returns the host-wide login URL used by multi-tenant signup.
+func LoginBaseURL(ctx context.Context) string {
 	request := ctx.Value(app.RequestCtxKey).(Request)
 
 	if env.IsSingleHostMode() {
