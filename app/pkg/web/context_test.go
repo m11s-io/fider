@@ -106,6 +106,27 @@ func TestTenantURL_WithCNAME(t *testing.T) {
 	Expect(web.TenantBaseURL(ctx, tenant)).Equals("http://feedback.theavengers.com:3000")
 }
 
+func TestTenantURL_WithoutHostDomain(t *testing.T) {
+	RegisterT(t)
+
+	hostMode := env.Config.HostMode
+	hostDomain := env.Config.HostDomain
+	defer func() {
+		env.Config.HostMode = hostMode
+		env.Config.HostDomain = hostDomain
+	}()
+
+	env.Config.HostMode = "multi"
+	env.Config.HostDomain = ""
+
+	ctx := newGetContext("http://tenant.admin.example.test:3000", nil)
+	tenant := &entity.Tenant{
+		ID:        1,
+		Subdomain: "tenant",
+	}
+	Expect(web.TenantBaseURL(ctx, tenant)).Equals("http://tenant.admin.example.test:3000")
+}
+
 func TestTenantURL_SingleHostMode(t *testing.T) {
 	RegisterT(t)
 	env.Config.HostMode = "single"
@@ -213,16 +234,4 @@ func TestGetOAuthBaseURL_WithPort(t *testing.T) {
 
 	env.Config.HostMode = "single"
 	Expect(web.OAuthBaseURL(ctx)).Equals("https://test.fider.io:3000")
-}
-
-func TestGetLoginBaseURL(t *testing.T) {
-	RegisterT(t)
-
-	ctx := newGetContext("https://mydomain.com/hello-world", nil)
-
-	env.Config.HostMode = "multi"
-	Expect(web.LoginBaseURL(ctx)).Equals("https://login.test.fider.io")
-
-	env.Config.HostMode = "single"
-	Expect(web.LoginBaseURL(ctx)).Equals("https://test.fider.io:3000")
 }

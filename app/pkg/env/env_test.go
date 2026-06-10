@@ -43,6 +43,8 @@ func TestMultiTenantDomain(t *testing.T) {
 	Expect(env.MultiTenantDomain()).Equals(".dev.fider.io")
 	env.Config.HostDomain = "fider.io"
 	Expect(env.MultiTenantDomain()).Equals(".fider.io")
+	env.Config.HostDomain = ""
+	Expect(env.MultiTenantDomain()).Equals("")
 }
 
 func TestSubdomain(t *testing.T) {

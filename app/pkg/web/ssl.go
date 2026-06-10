@@ -79,8 +79,9 @@ func isValidHostName(ctx context.Context, host string) error {
 		return errors.Wrap(errInvalidHostName, "no CNAME DNS record found for %s", host)
 	}
 
-	if strings.TrimSuffix(cname, ".") != getTenant.Result.Subdomain+env.MultiTenantDomain() {
-		return errors.Wrap(errInvalidHostName, "cname %s (from %s) doesn't match configured host %s", cname, host, getTenant.Result.Subdomain+env.MultiTenantDomain())
+	domain := env.MultiTenantDomain()
+	if domain != "" && strings.TrimSuffix(cname, ".") != getTenant.Result.Subdomain+domain {
+		return errors.Wrap(errInvalidHostName, "cname %s (from %s) doesn't match configured host %s", cname, host, getTenant.Result.Subdomain+domain)
 	}
 
 	return nil

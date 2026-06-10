@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	. "github.com/getfider/fider/app/pkg/assert"
+	"github.com/getfider/fider/app/pkg/env"
 	"github.com/getfider/fider/app/pkg/web"
 )
 
@@ -108,6 +109,18 @@ func TestRequest_FullURL(t *testing.T) {
 
 	req3 := web.WrapRequest(&http.Request{Host: "feedback.demo.com"})
 	Expect(req3.IsCustomDomain()).IsTrue()
+}
+
+func TestRequest_IsCustomDomain_WithoutHostDomain(t *testing.T) {
+	RegisterT(t)
+
+	hostDomain := env.Config.HostDomain
+	defer func() { env.Config.HostDomain = hostDomain }()
+
+	env.Config.HostDomain = ""
+
+	req := web.WrapRequest(&http.Request{Host: "feedback.example.test"})
+	Expect(req.IsCustomDomain()).IsTrue()
 }
 
 func TestRequest_IsCrawler(t *testing.T) {

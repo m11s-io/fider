@@ -33,7 +33,7 @@ func TestSignUpHandler_MultiTenant(t *testing.T) {
 	Expect(code).Equals(http.StatusOK)
 }
 
-func TestSignUpHandler_MultiTenant_WrongURL(t *testing.T) {
+func TestSignUpHandler_MultiTenant_CustomHost(t *testing.T) {
 	RegisterT(t)
 
 	server := mock.NewServer()
@@ -41,8 +41,8 @@ func TestSignUpHandler_MultiTenant_WrongURL(t *testing.T) {
 		WithURL("http://demo.test.fider.io/signup").
 		Execute(handlers.SignUp())
 
-	Expect(code).Equals(http.StatusTemporaryRedirect)
-	Expect(response.Header().Get("Location")).Equals("http://login.test.fider.io/signup")
+	Expect(code).Equals(http.StatusOK)
+	Expect(response.Header().Get("Location")).Equals("")
 }
 
 func TestSignUpHandler_SingleTenant_NoTenants(t *testing.T) {

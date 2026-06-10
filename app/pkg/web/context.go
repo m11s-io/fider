@@ -564,7 +564,11 @@ func TenantBaseURL(ctx context.Context, tenant *entity.Tenant) string {
 	if tenant.CNAME != "" {
 		address += tenant.CNAME
 	} else {
-		address += tenant.Subdomain + env.MultiTenantDomain()
+		domain := env.MultiTenantDomain()
+		if domain == "" {
+			return BaseURL(ctx)
+		}
+		address += tenant.Subdomain + domain
 	}
 
 	if request.URL.Port() != "" {
@@ -624,20 +628,4 @@ func BaseURL(ctx context.Context) string {
 // OAuthBaseURL returns the OAuth base URL for the current request host.
 func OAuthBaseURL(ctx context.Context) string {
 	return BaseURL(ctx)
-}
-
-// LoginBaseURL returns the host-wide login URL used by multi-tenant signup.
-func LoginBaseURL(ctx context.Context) string {
-	request := ctx.Value(app.RequestCtxKey).(Request)
-
-	if env.IsSingleHostMode() {
-		return BaseURL(ctx)
-	}
-
-	oauthBaseURL := request.URL.Scheme + "://login" + env.MultiTenantDomain()
-	port := request.URL.Port()
-	if port != "" {
-		oauthBaseURL += ":" + port
-	}
-	return oauthBaseURL
 }

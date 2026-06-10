@@ -7,6 +7,7 @@ import (
 	"github.com/getfider/fider/app/models/query"
 	. "github.com/getfider/fider/app/pkg/assert"
 	"github.com/getfider/fider/app/pkg/bus"
+	"github.com/getfider/fider/app/pkg/env"
 	"github.com/getfider/fider/app/pkg/rand"
 	"github.com/getfider/fider/app/pkg/validate"
 )
@@ -178,4 +179,26 @@ func TestValidCNAME_Availability(t *testing.T) {
 		messages := validate.CNAME(context.Background(), cname)
 		Expect(messages).HasLen(0)
 	}
+}
+
+func TestValidCNAME_WithoutHostDomain(t *testing.T) {
+	RegisterT(t)
+
+	hostMode := env.Config.HostMode
+	hostDomain := env.Config.HostDomain
+	defer func() {
+		env.Config.HostMode = hostMode
+		env.Config.HostDomain = hostDomain
+	}()
+
+	env.Config.HostMode = "multi"
+	env.Config.HostDomain = ""
+
+	bus.AddHandler(func(ctx context.Context, q *query.IsCNAMEAvailable) error {
+		q.Result = true
+		return nil
+	})
+
+	messages := validate.CNAME(context.Background(), "feedback.example.test")
+	Expect(messages).HasLen(0)
 }

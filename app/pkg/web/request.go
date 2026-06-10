@@ -98,6 +98,9 @@ func (r *Request) IsCrawler() bool {
 
 // IsCustomDomain returns true if the request was made using a custom domain (CNAME)
 func (r *Request) IsCustomDomain() bool {
+	if env.Config.HostDomain == "" {
+		return true
+	}
 	return !strings.HasSuffix(r.URL.Hostname(), env.Config.HostDomain)
 }
 

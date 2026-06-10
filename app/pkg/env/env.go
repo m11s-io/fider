@@ -235,9 +235,10 @@ func HasLegal() bool {
 	return *hasLegal
 }
 
-// MultiTenantDomain returns domain name of current instance for multi tenant hosts
+// MultiTenantDomain returns domain name of current instance for multi tenant hosts.
+// Returns empty string when HOST_DOMAIN is not set (all tenants are custom domains).
 func MultiTenantDomain() string {
-	if !IsSingleHostMode() {
+	if !IsSingleHostMode() && Config.HostDomain != "" {
 		return "." + Config.HostDomain
 	}
 	return ""
