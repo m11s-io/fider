@@ -1,7 +1,7 @@
 version: "3"
 services:
   smtp:
-    image: mailhog/mailhog:latest
+    image: mailhog/mailhog:v1.0.1@sha256:8d76a3d4ffa32a3661311944007a415332c4bb855657f4f6c57996405c009bea
     restart: always
     ports:
       - "8025:8025"
@@ -9,7 +9,7 @@ services:
   pgdev:
     container_name: fider_pgdev
     restart: always
-    image: postgres:17
+    image: postgres:17.10@sha256:39fb82e41109483c81ac15422a302500b4a753777b47f8431038703536bc6c52
     volumes:
       - pgdev-data:/var/lib/postgresql/data
     ports:
@@ -20,7 +20,7 @@ services:
   pgtest:
     container_name: fider_pgtest
     restart: always
-    image: postgres:17
+    image: postgres:17.10@sha256:39fb82e41109483c81ac15422a302500b4a753777b47f8431038703536bc6c52
     ports:
       - "5566:5432"
     environment:
