@@ -126,6 +126,17 @@ func activateTenant(ctx context.Context, c *cmd.ActivateTenant) error {
 	})
 }
 
+func updateTenantStatus(ctx context.Context, c *cmd.UpdateTenantStatus) error {
+	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
+		query := "UPDATE tenants SET status = $1 WHERE id = $2"
+		_, err := trx.Execute(query, c.Status, c.TenantID)
+		if err != nil {
+			return errors.Wrap(err, "failed to update status of tenant with id '%d'", c.TenantID)
+		}
+		return nil
+	})
+}
+
 func getVerificationByKey(ctx context.Context, q *query.GetVerificationByKey) error {
 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
 		verification := dbEntities.EmailVerification{}
@@ -258,7 +269,7 @@ func getFirstTenant(ctx context.Context, q *query.GetFirstTenant) error {
 	return using(ctx, func(trx *dbx.Trx, _ *entity.Tenant, _ *entity.User) error {
 		tenant := dbEntities.Tenant{}
 
-	err := trx.Get(&tenant, `
+		err := trx.Get(&tenant, `
 		SELECT t.id, t.name, t.subdomain, t.cname, t.invitation, t.locale, t.welcome_message, t.welcome_header, t.status, t.is_private, t.logo_bkey, t.custom_css, t.allowed_schemes, t.is_email_auth_allowed, t.is_feed_enabled, t.is_moderation_enabled, t.prevent_indexing, t.is_pro,
 			(b.paddle_subscription_id IS NOT NULL AND b.stripe_subscription_id IS NULL) AS has_paddle_subscription
 		FROM tenants t
@@ -278,7 +289,7 @@ func getTenantByDomain(ctx context.Context, q *query.GetTenantByDomain) error {
 	return using(ctx, func(trx *dbx.Trx, _ *entity.Tenant, _ *entity.User) error {
 		tenant := dbEntities.Tenant{}
 
-	err := trx.Get(&tenant, `
+		err := trx.Get(&tenant, `
 		SELECT t.id, t.name, t.subdomain, t.cname, t.invitation, t.locale, t.welcome_message, t.welcome_header, t.status, t.is_private, t.logo_bkey, t.custom_css, t.allowed_schemes, t.is_email_auth_allowed, t.is_feed_enabled, t.is_moderation_enabled, t.prevent_indexing, t.is_pro,
 			(b.paddle_subscription_id IS NOT NULL AND b.stripe_subscription_id IS NULL) AS has_paddle_subscription
 		FROM tenants t

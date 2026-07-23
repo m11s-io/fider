@@ -45,6 +45,11 @@ type ActivateTenant struct {
 	TenantID int
 }
 
+type UpdateTenantStatus struct {
+	TenantID int
+	Status   enum.TenantStatus
+}
+
 type SaveVerificationKey struct {
 	Key      string
 	Code     string

@@ -21,6 +21,13 @@ type GetUserByAPIKey struct {
 	Result *entity.User
 }
 
+// GetUserAPIKey returns the raw API key stored for the given user (empty if none).
+type GetUserAPIKey struct {
+	UserID int
+
+	Result string
+}
+
 type GetCurrentUserSettings struct {
 	Result map[string]string
 }

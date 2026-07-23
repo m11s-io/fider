@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strings"
 	"time"
@@ -117,6 +118,43 @@ func regenerateAPIKey(ctx context.Context, c *cmd.RegenerateAPIKey) error {
 			user.ID, tenant.ID, apiKey, time.Now(),
 		); err != nil {
 			return errors.Wrap(err, "failed to update current user's API Key")
+		}
+
+		c.Result = apiKey
+		return nil
+	})
+}
+
+func getUserAPIKey(ctx context.Context, q *query.GetUserAPIKey) error {
+	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
+		var apiKey sql.NullString
+		err := trx.Scalar(&apiKey, "SELECT api_key FROM users WHERE id = $1 AND tenant_id = $2", q.UserID, tenant.ID)
+		if err != nil {
+			return errors.Wrap(err, "failed to get API Key for user with id '%d'", q.UserID)
+		}
+		q.Result = apiKey.String
+		return nil
+	})
+}
+
+func ensureAPIKey(ctx context.Context, c *cmd.EnsureAPIKey) error {
+	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
+		existing := &query.GetUserAPIKey{UserID: c.UserID}
+		if err := getUserAPIKey(ctx, existing); err != nil {
+			return err
+		}
+
+		if existing.Result != "" && !c.Regenerate {
+			c.Result = existing.Result
+			return nil
+		}
+
+		apiKey := entity.GenerateEmailVerificationKey()
+		if _, err := trx.Execute(
+			"UPDATE users SET api_key = $3, api_key_date = $4 WHERE id = $1 AND tenant_id = $2",
+			c.UserID, tenant.ID, apiKey, time.Now(),
+		); err != nil {
+			return errors.Wrap(err, "failed to set API Key for user with id '%d'", c.UserID)
 		}
 
 		c.Result = apiKey

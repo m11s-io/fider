@@ -22,6 +22,17 @@ type RegenerateAPIKey struct {
 	Result string
 }
 
+// EnsureAPIKey makes sure the given user has an API key. The existing key is
+// kept (and returned) unless it is missing or Regenerate is true, in which case
+// a new key is generated. Used by the bootstrap flow to keep API keys stable
+// across repeated applies.
+type EnsureAPIKey struct {
+	UserID     int
+	Regenerate bool
+
+	Result string
+}
+
 type DeleteCurrentUser struct {
 }
 
@@ -55,4 +66,4 @@ type UpdateCurrentUser struct {
 	Avatar     *dto.ImageUpload
 }
 
-type RotateAllUserSecurityStamps struct {}
+type RotateAllUserSecurityStamps struct{}

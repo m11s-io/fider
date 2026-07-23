@@ -401,6 +401,48 @@ func TestUserStorage_APIKey(t *testing.T) {
 	Expect(errors.Cause(err)).Equals(app.ErrNotFound)
 }
 
+func TestUserStorage_EnsureAPIKey(t *testing.T) {
+	ctx := SetupDatabaseTest(t)
+	defer TeardownDatabaseTest()
+
+	// First call creates a key for a user that has none.
+	ensure := &cmd.EnsureAPIKey{UserID: 1}
+	err := bus.Dispatch(ctx, ensure)
+	Expect(err).IsNil()
+	Expect(ensure.Result).HasLen(64)
+	firstKey := ensure.Result
+
+	// getUserAPIKey returns the stored key.
+	getKey := &query.GetUserAPIKey{UserID: 1}
+	err = bus.Dispatch(ctx, getKey)
+	Expect(err).IsNil()
+	Expect(getKey.Result).Equals(firstKey)
+
+	// Second call without Regenerate keeps the same key (stable).
+	ensure = &cmd.EnsureAPIKey{UserID: 1}
+	err = bus.Dispatch(ctx, ensure)
+	Expect(err).IsNil()
+	Expect(ensure.Result).Equals(firstKey)
+
+	// With Regenerate, a new key is generated.
+	ensure = &cmd.EnsureAPIKey{UserID: 1, Regenerate: true}
+	err = bus.Dispatch(ctx, ensure)
+	Expect(err).IsNil()
+	Expect(ensure.Result).HasLen(64)
+	Expect(ensure.Result).NotEquals(firstKey)
+}
+
+func TestUserStorage_GetUserAPIKey_None(t *testing.T) {
+	ctx := SetupDatabaseTest(t)
+	defer TeardownDatabaseTest()
+
+	// A freshly seeded user with no API key yields an empty result, not an error.
+	getKey := &query.GetUserAPIKey{UserID: 1}
+	err := bus.Dispatch(ctx, getKey)
+	Expect(err).IsNil()
+	Expect(getKey.Result).Equals("")
+}
+
 func TestUserStorage_BlockUser(t *testing.T) {
 	SetupDatabaseTest(t)
 	defer TeardownDatabaseTest()

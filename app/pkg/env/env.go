@@ -37,6 +37,7 @@ func Version() string {
 type config struct {
 	Environment    string `env:"GO_ENV,default=production"`
 	SignUpDisabled bool   `env:"SIGNUP_DISABLED,default=false"`
+	BootstrapToken string `env:"BOOTSTRAP_TOKEN"`
 	TLS            struct {
 		Automatic      bool   `env:"SSL_AUTO,default=false"`
 		Certificate    string `env:"SSL_CERT"`

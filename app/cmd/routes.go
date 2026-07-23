@@ -58,6 +58,22 @@ func routes(r *web.Engine) *web.Engine {
 		feed.Get("/feed/posts/:path", handlers.CommentFeed())
 	}
 
+	// Internal bootstrap API for infrastructure automation (Terraform).
+	// Protected by BOOTSTRAP_TOKEN, addressed by subdomain, and mounted before
+	// tenant resolution so it can manage tenants cross-tenant. Must be kept off
+	// the public ingress (restrict /_api/internal/ to the internal network).
+	bootstrap := r.Group()
+	{
+		bootstrap.Use(middlewares.WebSetup())
+		bootstrap.Use(middlewares.BootstrapAuth())
+
+		bootstrap.Post("/_api/internal/bootstrap/tenant", handlers.BootstrapTenant())
+		bootstrap.Get("/_api/internal/bootstrap/tenant/:subdomain", handlers.GetBootstrapTenant())
+		bootstrap.Post("/_api/internal/bootstrap/tenant/:subdomain/lock", handlers.BootstrapLockTenant())
+		bootstrap.Post("/_api/internal/bootstrap/tenant/:subdomain/oauth", handlers.BootstrapOAuthConfig())
+		bootstrap.Get("/_api/internal/bootstrap/tenant/:subdomain/oauth/:provider", handlers.GetBootstrapOAuthConfig())
+	}
+
 	r.Use(middlewares.Session())
 
 	r.Get("/robots.txt", handlers.RobotsTXT())
