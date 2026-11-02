@@ -13,7 +13,7 @@ require (
 	github.com/golangci/golangci-lint/v2 v2.7.2
 	github.com/gomarkdown/markdown v0.0.0-20250207164621-7a1f277a159e
 	github.com/gosimple/slug v1.15.0
-	github.com/gotnospirit/messageformat v0.0.0-20190719172517-c1d0bdacdea2
+	github.com/gotnospirit/messageformat v0.0.0-20221001023931-dfe49f1eb092
 	github.com/joeshaw/envdecode v0.0.0-20200121155833-099f1fc765bd
 	github.com/joho/godotenv v1.5.1
 	github.com/julienschmidt/httprouter v1.3.1-0.20200921135023-fe77dd05ab5a
