@@ -21,9 +21,9 @@ concurrency:
 jobs:
   renovate:
     if: ${{ github.event_name == 'workflow_dispatch' || false }}
-    uses: m11s-io/.github/.github/workflows/renovate.yml@8c4c560ce53ef8affe4513e0dcf9ba23e28dfdbd
+    uses: m11s-io/.github/.github/workflows/renovate.yml@c9c67da0e865ce7c2841c954d4ac5243782ac9f5
     with:
-      host-ref: 8c4c560ce53ef8affe4513e0dcf9ba23e28dfdbd
+      host-ref: c9c67da0e865ce7c2841c954d4ac5243782ac9f5
       live: ${{ false && (github.event_name != 'workflow_dispatch' || !inputs.dry-run) }}
     secrets:
       RENOVATE_APP_PRIVATE_KEY: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
