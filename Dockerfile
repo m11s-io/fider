@@ -42,7 +42,7 @@ RUN make build-ui
 ################
 ### Runtime Step
 ################
-FROM --platform=${TARGETPLATFORM:-linux/amd64} debian:bookworm-slim
+FROM --platform=${TARGETPLATFORM:-linux/amd64} debian:bookworm-slim@sha256:99c0b25c46d0214d5a2091092e7908907dcaecd6a962cde0ac700acee222b6f3
 
 RUN apt-get update && apt-get install -y ca-certificates
 
