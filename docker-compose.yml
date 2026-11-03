@@ -29,15 +29,16 @@ services:
   s3test:
     container_name: fider_s3test
     restart: always
-    image: minio/minio:RELEASE.2021-07-27T02-40-15Z
+    # renovate: datasource=docker depName=cgr.dev/chainguard/minio
+    image: cgr.dev/chainguard/minio:latest@sha256:3c60a2a8c4d33409a9bc7a623a7fcbfb4605adc3d89422d2f53b3f673a6e5597
     ports:
       - "9000:9000"
       - "9001:9001"
     volumes:
       - s3test-data:/data
     environment:
-      MINIO_ACCESS_KEY: s3user
-      MINIO_SECRET_KEY: s3user-s3cr3t
+      MINIO_ROOT_USER: s3user
+      MINIO_ROOT_PASSWORD: s3user-s3cr3t
     command: server /data --console-address ":9001"
 
 volumes:
