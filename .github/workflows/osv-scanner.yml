@@ -19,4 +19,4 @@ concurrency:
 
 jobs:
   scan:
-    uses: m11s-io/.github/.github/workflows/osv-scanner.yml@3874c82162a3a592e1729ca2e73dad488b117cf0
+    uses: m11s-io/.github/.github/workflows/osv-scanner.yml@main
