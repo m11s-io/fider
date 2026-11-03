@@ -15,13 +15,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: self-hosted-renovate
+  group: renovate
   cancel-in-progress: false
 
 jobs:
   renovate:
     if: ${{ github.event_name == 'workflow_dispatch' || true }}
-    uses: m11s-io/.github/.github/workflows/renovate.yml@main
+    uses: m11s-io/.github/.github/workflows/renovate-run.yml@main
     with:
       host-ref: main
       live: ${{ true && (github.event_name != 'workflow_dispatch' || !inputs.dry-run) }}
