@@ -12,7 +12,7 @@ permissions:
 jobs:
   publish:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Dump GitHub context
