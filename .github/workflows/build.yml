@@ -40,14 +40,14 @@ jobs:
     runs-on: ubuntu-26.04
     services:
       minio:
-        image: getfider/minio:0.0.2
+        image: getfider/minio:0.0.2@sha256:591c64521d531a937b9ffc8bf2546fea783785112a076f35821a9c65bc038fb2
         ports:
           - 9000:9000
         env:
           MINIO_ACCESS_KEY: s3user
           MINIO_SECRET_KEY: s3user-s3cr3t
       postgres:
-        image: postgres:17
+        image: postgres:17@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
         env:
           POSTGRES_USER: fider_ci
           POSTGRES_PASSWORD: fider_ci_pw
@@ -119,12 +119,12 @@ jobs:
     needs: [build]
     services:
       mailhog:
-        image: mailhog/mailhog:latest
+        image: mailhog/mailhog:latest@sha256:8d76a3d4ffa32a3661311944007a415332c4bb855657f4f6c57996405c009bea
         ports:
           - "8025:8025"
           - "1025:1025"
       postgres:
-        image: postgres:17
+        image: postgres:17@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
         env:
           POSTGRES_USER: fider_ci
           POSTGRES_PASSWORD: fider_ci_pw
@@ -179,12 +179,12 @@ jobs:
     needs: [build]
     services:
       mailhog:
-        image: mailhog/mailhog:latest
+        image: mailhog/mailhog:latest@sha256:8d76a3d4ffa32a3661311944007a415332c4bb855657f4f6c57996405c009bea
         ports:
           - "8025:8025"
           - "1025:1025"
       postgres:
-        image: postgres:17
+        image: postgres:17@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
         env:
           POSTGRES_USER: fider_ci
           POSTGRES_PASSWORD: fider_ci_pw
