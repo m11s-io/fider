@@ -21,4 +21,3 @@ jobs:
     uses: m11s-io/.github/.github/workflows/osv-scanner.yml@main
     with:
       upload-sarif: true
-
