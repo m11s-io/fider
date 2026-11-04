@@ -28,4 +28,3 @@ jobs:
       live: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry-run }}
     secrets:
       RENOVATE_APP_PRIVATE_KEY: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
-
