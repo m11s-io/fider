@@ -5,8 +5,6 @@ on:
   pull_request:
   push:
     branches: [main]
-  schedule:
-    - cron: '10 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -23,3 +21,4 @@ jobs:
     uses: m11s-io/.github/.github/workflows/osv-scanner.yml@main
     with:
       upload-sarif: true
+
